@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
             error: null,
             emails: [],
             search: "",
-            search_by: "id",
+            search_by: "mail_from",
             status_filter: "NOFILTER",
             page: 1,
             page_count: 1,
