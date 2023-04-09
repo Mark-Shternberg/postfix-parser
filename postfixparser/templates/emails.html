@@ -25,9 +25,9 @@
         <div class="ui labeled fluid input">
             <input v-model="search" type="text" class="ui input" placeholder="Search Emails"/>
             <select name="searchby-email" id="searchby-email" v-model="search_by" class="dropdown">
-                <option value="id">Queue ID</option>
                 <option value="mail_from">From Address</option>
                 <option value="mail_to">To Address</option>
+                <option value="id">Queue ID</option>
                 <option value="timestamp__lt">Older Than</option>
                 <option value="timestamp__gt">Newer Than</option>
             </select>
@@ -36,6 +36,7 @@
                 <option value="sent">Successfully Sent</option>
                 <option value="bounced">Bounced</option>
                 <option value="deferred">Delayed (deferred)</option>
+                <option value="rejected">Rejected</option>
             </select>
             <a href="/logout"><button class="ui button red">Log Out</button></a>
         </div>
@@ -58,6 +59,7 @@
                 <th>To</th>
                 <th>First Attempt</th>
                 <th>Last Attempt</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
