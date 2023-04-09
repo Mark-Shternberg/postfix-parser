@@ -32,11 +32,15 @@ log = logging.getLogger(__name__)
 _match = r'([A-Za-z]+[ \t]+[0-9]+[ \t]+[0-9]+\:[0-9]+:[0-9]+).*'
 """(0) Regex to match the Date/Time at the start of each log line"""
 
-_match += r'([A-F0-9]{10})\:[ \t]+?(.*)'
+_match += r'\: ([A-F0-9]*)\:[ \t]+?(.*)'
 """Regex to match the (1) Queue ID and the (2) Log Message"""
 
 match = re.compile(_match)
 
+_match_noqid = r'([A-Za-z]+[ \t]+[0-9]+[ \t]+[0-9]+\:[0-9]+:[0-9]+).*'
+_match_noqid += r'NOQUEUE\: (reject.*)'
+
+match_noqid = re.compile(_match_noqid)
 
 class ObjectExists(BaseException):
     pass
@@ -83,6 +87,23 @@ async def import_log(logfile: str) -> Dict[str, PostfixMessage]:
 
             messages[qid].merge(await parse_line(msg))
             messages[qid].lines.append(PostfixLog(timestamp=dtime, queue_id=qid, message=msg))
+    
+    with open(logfile, 'r') as g:
+        while True:
+            line = g.readline()
+            if not line: break
+
+            m = match_noqid.match(line)
+            if not m: continue
+
+            log.info('noqid 2',line)
+
+            dtime2, msg2 = n.groups()
+            if dtime2 not in messages:
+                messages[dtime2] = PostfixMessage(timestamp=dtime2, queue_id=dtime2)
+
+            messages[dtime2].merge(await parse_line(msg2))
+            messages[dtime2].lines.append(PostfixLog(timestamp=dtime2, queue_id=dtime2, message=msg2))
 
     log.info('Finished parsing log file %s', logfile)
     return messages
