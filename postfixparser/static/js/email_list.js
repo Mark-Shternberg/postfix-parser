@@ -14,6 +14,7 @@ window.addEventListener('load', () => {
             search: "",
             search_by: "mail_from",
             status_filter: "NOFILTER",
+            date_filter: "",
             page: 1,
             page_count: 1,
             page_reset: false,
@@ -28,10 +29,13 @@ window.addEventListener('load', () => {
                 let d = {};
 
                 if (this.search !== "") {
-                    d[this.search_by] = this.search;
+                    d[this.search_by] = "*"+this.search+"*";
                 }
                 if (this.status_filter !== "NOFILTER") {
                     d['status.code'] = this.status_filter;
+                }
+                if (this.date_filter !== "") {
+                    d['timestamp'] = this.date_filter;
                 }
                 return d;
             },
@@ -56,6 +60,10 @@ window.addEventListener('load', () => {
                 }
             },
             status_filter(val) {
+                this.reset_page();
+                debounce_emails();
+            },
+            date_filter(val) {
                 this.reset_page();
                 debounce_emails();
             },

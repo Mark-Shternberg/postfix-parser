@@ -216,6 +216,7 @@ async def _process_filters(query: QueryOrTable, frm: Mapping, skip_keys: List[st
 
 
 async def _filter_form_key(fkey: str, fval: str, query: QueryOrTable) -> QueryOrTable:
+    r = await get_rethink()
     if '.' in fkey:
         k1, k2 = fkey.split('.')
         return query.filter(lambda m: m[k1][k2] == fval)
@@ -225,6 +226,8 @@ async def _filter_form_key(fkey: str, fval: str, query: QueryOrTable) -> QueryOr
     if '__gt' in fkey:
         fkey = fkey.replace('__gt', '')
         return query.filter(lambda m: m[fkey] >= fval)
+    if 'timestamp' in fkey:
+        return query.filter(lambda m: m[fkey] >= r.time(fval.split('-')[0],fval.split('-')[1],fval.split('-')[2]) & m[fkey] < r.time(fval.split('-')[0],fval.split('-')[1],fval.split('-')[2]))
     # If the form key value starts or ends with an asterisk, then we use .match() with regex filtering
     # to find items which start/end with the actual value (rval = without asterisks)
     if fval.startswith('*') or fval.endswith('*'):

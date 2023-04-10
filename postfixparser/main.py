@@ -25,9 +25,10 @@ from postfixparser import settings
 from postfixparser.core import get_rethink
 from postfixparser.objects import PostfixLog, PostfixMessage
 from postfixparser.parser import parse_line
+import datetime
+
 
 log = logging.getLogger(__name__)
-
 
 _match = r'([A-Za-z]+[ \t]+[0-9]+[ \t]+[0-9]+\:[0-9]+:[0-9]+).*'
 """(0) Regex to match the Date/Time at the start of each log line"""
@@ -41,6 +42,35 @@ _match_noqid = r'([A-Za-z]+[ \t]+[0-9]+[ \t]+[0-9]+\:[0-9]+:[0-9]+).*'
 _match_noqid += r'NOQUEUE\: (reject.*)'
 
 match_noqid = re.compile(_match_noqid)
+
+def id_converter(date: str):
+    if 'Jan ' in date: 
+        date = date.replace('Jan ','01')
+    elif 'Feb ' in date: 
+        date = date.replace('Feb ','02')
+    elif 'Mar ' in date: 
+        date = date.replace('Mar ','03')
+    elif 'Apr ' in date: 
+        date = date.replace('Apr ','04')
+    elif 'May ' in date: 
+        date = date.replace('May ','05')
+    elif 'Jun ' in date: 
+        date = date.replace('Jun ','06')
+    elif 'Jul ' in date: 
+        date = date.replace('Jul ','07')
+    elif 'Aug ' in date: 
+        date = date.replace('Aug ','08')
+    elif 'Sep ' in date: 
+        date = date.replace('Sep ','09')
+    elif 'Oct ' in date: 
+        date = date.replace('Oct ','10')
+    elif 'Nov ' in date: 
+        date = date.replace('Nov ','11')
+    elif 'Dec ' in date: 
+        date = date.replace('Dec ','12')
+    date = date.replace(' ','')
+    date = date.replace(':','')
+    return date
 
 class ObjectExists(BaseException):
     pass
@@ -98,12 +128,15 @@ async def import_log(logfile: str) -> Dict[str, PostfixMessage]:
 
             log.info('noqid 2',line)
 
-            dtime2, msg2 = n.groups()
-            if dtime2 not in messages:
-                messages[dtime2] = PostfixMessage(timestamp=dtime2, queue_id=dtime2)
+            dtime2, msg2 = m.groups()
+            today = datetime.date.today()
+            dtime = dtime2 + str(today.year)
+            noqid = id_converter(dtime)
+            if noqid not in messages:
+                messages[noqid] = PostfixMessage(timestamp=dtime2, queue_id=noqid)
 
-            messages[dtime2].merge(await parse_line(msg2))
-            messages[dtime2].lines.append(PostfixLog(timestamp=dtime2, queue_id=dtime2, message=msg2))
+            messages[noqid].merge(await parse_line(msg2))
+            messages[noqid].lines.append(PostfixLog(timestamp=dtime2, queue_id=noqid, message=msg2))
 
     log.info('Finished parsing log file %s', logfile)
     return messages
@@ -132,4 +165,3 @@ async def main():
     log.info('Firing off asyncio.gather(save_list)...')
     await asyncio.gather(*save_list)
     log.info('Finished!')
-
