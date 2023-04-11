@@ -139,29 +139,29 @@ async def main():
 
 def date_converter(ldate: str):
     if 'Jan ' in ldate: 
-        ldate = ldate.replace('Jan ','01')
+        ldate = ldate.replace('Jan','01')
     elif 'Feb ' in ldate: 
-        ldate = ldate.replace('Feb ','02')
+        ldate = ldate.replace('Feb','02')
     elif 'Mar ' in ldate: 
-        ldate = ldate.replace('Mar ','03')
+        ldate = ldate.replace('Mar','03')
     elif 'Apr ' in ldate: 
-        ldate = ldate.replace('Apr ','04')
+        ldate = ldate.replace('Apr','04')
     elif 'May ' in ldate: 
-        ldate = ldate.replace('May ','05')
+        ldate = ldate.replace('May','05')
     elif 'Jun ' in ldate: 
-        ldate = ldate.replace('Jun ','06')
+        ldate = ldate.replace('Jun','06')
     elif 'Jul ' in ldate: 
-        ldate = ldate.replace('Jul ','07')
+        ldate = ldate.replace('Jul','07')
     elif 'Aug ' in ldate: 
-        ldate = ldate.replace('Aug ','08')
+        ldate = ldate.replace('Aug','08')
     elif 'Sep ' in ldate: 
-        ldate = ldate.replace('Sep ','09')
+        ldate = ldate.replace('Sep','09')
     elif 'Oct ' in ldate: 
-        ldate = ldate.replace('Oct ','10')
+        ldate = ldate.replace('Oct','10')
     elif 'Nov ' in ldate: 
-        ldate = ldate.replace('Nov ','11')
+        ldate = ldate.replace('Nov','11')
     elif 'Dec ' in ldate: 
-        ldate = ldate.replace('Dec ','12')
+        ldate = ldate.replace('Dec','12')
     today = datetime.date.today()
     date = re.sub(r'[0-9][0-9]:[0-9][0-9]:[0-9][0-9]', str(today.year), ldate)
     date = date.split(' ')[2]+"-"+date.split(' ')[0]+"-"+date.split(' ')[1]
@@ -169,29 +169,29 @@ def date_converter(ldate: str):
 
 def id_converter(date: str):
     if 'Jan ' in date: 
-        date = date.replace('Jan ','01')
+        date = date.replace('Jan','01')
     elif 'Feb ' in date: 
-        date = date.replace('Feb ','02')
+        date = date.replace('Feb','02')
     elif 'Mar ' in date: 
-        date = date.replace('Mar ','03')
+        date = date.replace('Mar','03')
     elif 'Apr ' in date: 
-        date = date.replace('Apr ','04')
+        date = date.replace('Apr','04')
     elif 'May ' in date: 
-        date = date.replace('May ','05')
+        date = date.replace('May','05')
     elif 'Jun ' in date: 
-        date = date.replace('Jun ','06')
+        date = date.replace('Jun','06')
     elif 'Jul ' in date: 
-        date = date.replace('Jul ','07')
+        date = date.replace('Jul','07')
     elif 'Aug ' in date: 
-        date = date.replace('Aug ','08')
+        date = date.replace('Aug','08')
     elif 'Sep ' in date: 
-        date = date.replace('Sep ','09')
+        date = date.replace('Sep','09')
     elif 'Oct ' in date: 
-        date = date.replace('Oct ','10')
+        date = date.replace('Oct','10')
     elif 'Nov ' in date: 
-        date = date.replace('Nov ','11')
+        date = date.replace('Nov','11')
     elif 'Dec ' in date: 
-        date = date.replace('Dec ','12')
+        date = date.replace('Dec','12')
     date = date.replace(' ','')
     date = date.replace(':','')
     return date
