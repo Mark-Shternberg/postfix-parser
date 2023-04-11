@@ -26,7 +26,6 @@ Auto Install
 ========
 
 adduser --gecos "" --disabled-password mailparser
-# To ensure that the parser is able to read the mail.log, add the user to the appropriate groups
 usermod -G syslog,adm,postfix  mailparser
 
 su - mailparser
