@@ -24,7 +24,7 @@ This log parser can parse sent, deferred, rejected and bounced messages with sho
 
 Auto Install
 ========
-
+```
 adduser --gecos "" --disabled-password mailparser
 usermod -G syslog,adm,postfix  mailparser
 
@@ -32,7 +32,7 @@ su - mailparser
 
 git clone https://github.com/Mark-Shternberg/postfix-parser.git
 su root ./install.sh
-
+```
 
 Manual Install
 ========
