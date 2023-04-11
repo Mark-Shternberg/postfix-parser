@@ -55,7 +55,6 @@ apt install -y python3-pip
 python3 -m pip install -U pipenv
 
 adduser --gecos "" --disabled-password mailparser
-# To ensure that the parser is able to read the mail.log, add the user to the appropriate groups
 usermod -G syslog,adm,postfix  mailparser
 
 su - mailparser
