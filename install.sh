@@ -25,7 +25,7 @@ python3.8 -m pip install -U pipenv
 
 cd /home/mailparser/postfix-parser
 
-runuser -u mailparser -- cd /home/mailparser/postfix-parser && pipenv install
+sudo -H -u mailparser bash -c 'cd /home/mailparser/postfix-parser && pipenv install'
 
 read -p "Enter mail.log path (default: /var/log/mail.log): " mail_log
 if [[ $mail_log == '' ]]; then mail_log="/var/log/mail.log"; fi
