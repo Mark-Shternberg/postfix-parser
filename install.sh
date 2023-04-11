@@ -4,20 +4,23 @@ colRed="\033[31m"
 colYellow="\033[43m"
 resetCol="\033[0m"
 
+if [ `id -u` -ne 0 ]; then
+  echo "$colRed This script can be executed only as root, Exiting..$resetCol"
+  exit 1
+fi
+
 add-apt-repository ppa:deadsnakes/ppa
 
 apt-get -qqq update
 apt-get -qqq install -y python3.8 python3.8-dev python3.8-distutils
 
-apt-install python3-pip
+apt-get -qqq install python3-pip
 python3.8 -m pip install -U pipenv
 
-adduser --gecos "" --disabled-password mailparser
-gpasswd -a mailparser syslog
-gpasswd -a mailparser postfix
-gpasswd -a mailparser adm
+cd /home/mailparser/postfix-parser
 
-pipenv install
+runuser -u mailparser -- cd /home/mailparser/postfix-parser && pipenv install
+
 mail_log="/var/log/mail.log"
 read -p "Enter mail.log path (default: /var/log/mail.log): " mail_log
 echo -e "MAIL_LOG=$mail_log" > .env
@@ -50,16 +53,15 @@ fi
 
 cron () {
     echo "Creating cron job ..."
-    cat /etc/crontab | grep -qi 'update-ssl'
+    cat /etc/crontab | grep -qi '/tmp/lck_mailparser'
     if [[ $? != 0 ]]; then
     echo -e "$colYellow Cron job already exist. $resetCol"
     else
-    echo "10 0 * * * update-ssl" >> /etc/crontab
+    echo "*  *   *   *   *    flock /tmp/lck_mailparser /home/mailparser/postfix-parser/run.sh cron" > /etc/cron.d/mailparser
     if [ $? -eq 0 ]; then
         echo -e "$colGreen Cron job successfully created $resetCol"
     else
-        echo -e "$colRed Error. Restoring ... $resetCol"
-        rm /etc/ssl/ssl_distributor.sh
+        echo -e "$colRed Error for cron job. $resetCol"
         exit 1
     fi
 fi
