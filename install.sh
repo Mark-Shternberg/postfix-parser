@@ -9,6 +9,37 @@ if [ `id -u` -ne 0 ]; then
   exit 1
 fi
 
+cron_parse () {
+  echo "Creating cron job ..."
+  case $cron_answer in
+      [1] ) echo "0 * * * * mailparser cd /home/mailparser/postfix-parser && ./run.sh parse" > /etc/cron.d/mailparser;;
+      [2] ) echo "* 0 * * * mailparser cd /home/mailparser/postfix-parser && ./run.sh parse" > /etc/cron.d/mailparser;;
+      [3] ) echo "* * * * 7 mailparser cd /home/mailparser/postfix-parser && ./run.sh parse" > /etc/cron.d/mailparser;;
+      [4] ) echo "* * 1 * * mailparser cd /home/mailparser/postfix-parser && ./run.sh parse" > /etc/cron.d/mailparser;;
+      * ) echo -e "$colRed Incorrect answer. $resetCol";;
+  esac
+  if [ $? -eq 0 ]; then
+      echo -e "$colGreen Cron job successfully created $resetCol"
+  else
+      echo -e "$colRed Error for cron job. $resetCol"
+      exit 1
+  fi
+}
+
+cron_lock () {
+  echo "Creating cron job ..."
+  case $cron_lock_answer in
+    [yY] ) echo "* * * * * flock /tmp/lck_mailparser /home/mailparser/postfix-parser/run.sh cron" >> /etc/cron.d/mailparser;;
+    * ) echo -e "$colRed Incorrect answer. $resetCol";;
+  esac
+  if [ $? -eq 0 ]; then
+      echo -e "$colGreen Cron job successfully created $resetCol"
+  else
+      echo -e "$colRed Error for cron job. $resetCol"
+      exit 1
+  fi
+}
+
 wget -qO- https://download.rethinkdb.com/repository/raw/pubkey.gpg | \
     sudo gpg --dearmor -o /usr/share/keyrings/rethinkdb-archive-keyrings.gpg
 
@@ -39,9 +70,21 @@ echo -e "SECRET_KEY=$secret_key" >> .env
 echo -e "RETHINK_HOST=localhost\nRETHINK_DB=maildata\nVUE_DEBUG=false" >> .env
 
 while true; do
-    read -p "Do you need to lock temp file (for large logs)? [Yy/Nn]: " accept
-    case $accept in
-        [yY] ) cron;break;;
+    echo -e "When script must parse logs?\n1.Hourly\n2.Daily\n3.Weekly (sunday)\n4.Monthly "
+    read -p "Answer: " cron_answer
+    case $cron_answer in
+        [1] ) cron_parse;break;;
+        [2] ) cron_parse;break;;
+        [3] ) cron_parse;break;;
+        [4] ) cron_parse;break;;
+        * ) echo -e " $colRed Type only Y or N !$resetCol";;
+    esac
+done
+
+while true; do
+    read -p "Do you need to lock temp file (for large logs)? [Yy/Nn]: " cron_lock_answer
+    case $cron_lock_answer in
+        [yY] ) cron_lock;break;;
         [nN] ) break;;
         * ) echo -e " $colRed Type only Y or N !$resetCol";;
     esac
@@ -61,14 +104,3 @@ then
 else
   echo -e "$colRed Some errors! Check your configs and logs $resetCol"
 fi
-
-cron () {
-    echo "Creating cron job ..."
-    echo "*  *   *   *   *    flock /tmp/lck_mailparser /home/mailparser/postfix-parser/run.sh cron" > /etc/cron.d/mailparser
-    if [ $? -eq 0 ]; then
-        echo -e "$colGreen Cron job successfully created $resetCol"
-    else
-        echo -e "$colRed Error for cron job. $resetCol"
-        exit 1
-    fi
-}
