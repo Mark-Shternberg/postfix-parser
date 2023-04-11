@@ -35,10 +35,11 @@ window.addEventListener('load', () => {
                     d['status.code'] = this.status_filter;
                 }
                 if (this.date_filter !== "") {
-                    d['timestamp'] = this.date_filter;
+                    d['date'] = "*"+this.date_filter+"*";
                 }
                 return d;
             },
+            
             has_error() {
                 return (
                     (typeof this.error) !== 'undefined' &&
@@ -63,7 +64,7 @@ window.addEventListener('load', () => {
                 this.reset_page();
                 debounce_emails();
             },
-            date_filter(val) {
+            date_filter: function() {
                 this.reset_page();
                 debounce_emails();
             },
@@ -142,6 +143,13 @@ window.addEventListener('load', () => {
             // this.loadEmails();
             // this.debounce_emails = _.debounce(this.loadEmails, 1000);
             $('select.dropdown').dropdown();
+            
+            let jsScript2 = document.createElement('script')
+            jsScript2.setAttribute('src', '/static/js/daterangepicker.min.js')
+            document.head.appendChild(jsScript2)
+            let jsScript = document.createElement('script')
+            jsScript.setAttribute('src', '/static/js/date.js')
+            document.head.appendChild(jsScript)
         }
     });
 });

@@ -28,7 +28,13 @@
     <script src="https://cdn.privex.io/lib/semanticui/2.4.2/semantic.min.js"
             integrity="sha384-yvMKoOb78htxD1Bp6oo2tsnFh4lwwz+621kAp2m8YeFkSe9CM2+N1coOvw4R0uwt"
             crossorigin="anonymous" async></script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fontawesome.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/solid.css') }}" />
 
     {% block head_scripts %}
     {% endblock %}
@@ -46,8 +52,12 @@
 
         {% block content %}{% endblock %}
         <div class="ui segment" id="footer">
-            &copy; 2019 Privex Inc. --- Released under the GNU AGPL v3 ---
-            <a href="https://github.com/Privex/postfix-parser" target="_BLANK">View source on Github</a>
+            <div class="footer">
+                <div>&copy; 2023&nbsp; <a href="https://github.com/Mark-Shternberg/postfix-parser" target="_BLANK">View source on Github</a></div>
+                <div style="width: 100px;"></div>
+                <div><a href="https://www.privex.io/"><img style="height: 60px;" src="{{ url_for('static', filename='img/privex.png') }}"></a>
+                <a href="https://medvedev-it.ru/"><img style="height: 60px;" src="{{ url_for('static', filename='img/medvedev-it.svg') }}"></a></div>
+            </div>
         </div>
     </div>
 

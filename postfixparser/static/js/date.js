@@ -4,11 +4,12 @@ $(function() {
     "autoApply": true,
     "linkedCalendars": false,
     "showCustomRangeLabel": false,
+    "autoUpdateInput": true,
     "locale": {
-      "format": "YYYY-MM-DD"
+        "format": "YYYY-MM-D"
     },
     "firstDay": 1
-    }, function(start, end, label) {
-      console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    }).on("hide.daterangepicker",function (ev) {
+        this.dispatchEvent(new Event('input'))
     });
 });

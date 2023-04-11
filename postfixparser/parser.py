@@ -33,8 +33,7 @@ async def parse_line(mline) -> dict:
     _from = find_from.match(mline)
     _client = find_client.match(mline)
     _relay = find_relay.match(mline)
-    _reject = find_reject.match(mline)
-
+    
     if _to is not None: lm['mail_to'] = _to.group(1)
     if _from is not None: lm['mail_from'] = _from.group(1)
     if _client is not None: lm['client'] = dict(host=_client.group(1), ip=_client.group(2))
