@@ -16,12 +16,26 @@ There's also no requirement to run both the Web UI and the actual log parser/imp
 parsed data is kept in RethinkDB - thus you can run the WebUI on a separate server as long as it has access to the
 RethinkDB server.
 
+This log parser can parse sent, deferred, rejected and bounced messages with showing all needed data. Also it has filtering by ID, domain or date.
 
-![Screenshot of Log View Web UI](https://cdn.privex.io/github/postfix-parser/postfix-parser.png?2)
+![Screenshot of Log View Web UI](https://medvedev-it.ru/wp-content/uploads/2023/04/Без-имени-1.png)
 
 ![Screenshot of Email Show Modal](https://cdn.privex.io/github/postfix-parser/postfix-parser-modal.png)
 
-Install
+Auto Install
+========
+
+adduser --gecos "" --disabled-password mailparser
+# To ensure that the parser is able to read the mail.log, add the user to the appropriate groups
+usermod -G syslog,adm,postfix  mailparser
+
+su - mailparser
+
+git clone https://github.com/Mark-Shternberg/postfix-parser.git
+su root ./install.sh
+
+
+Manual Install
 ========
 
 **Pre-requisites**
@@ -34,17 +48,19 @@ Install
 ```
 
 apt update -y
-apt install -y python3.7 python3.7-dev python3-pip
+add-apt-repository ppa:deadsnakes/ppa
+apt install -y python3.8 python3.8-dev python3.8-distutils
+apt install -y python3-pip
 
-python3.7 -m pip install -U pipenv
+python3 -m pip install -U pipenv
 
 adduser --gecos "" --disabled-password mailparser
 # To ensure that the parser is able to read the mail.log, add the user to the appropriate groups
-gpasswd -a mailparser syslog adm postfix
+usermod -G syslog,adm,postfix  mailparser
 
 su - mailparser
 
-git clone https://github.com/Privex/postfix-parser.git
+git clone https://github.com/Mark-Shternberg/postfix-parser.git
 cd postfix-parser
 pipenv install
 

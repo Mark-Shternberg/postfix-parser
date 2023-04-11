@@ -1,7 +1,7 @@
 #!/bin/bash
 colGreen="\033[32m"
 colRed="\033[31m"
-colYellow="\033[43m"
+colYellow="\033[1;33m"
 resetCol="\033[0m"
 
 if [ `id -u` -ne 0 ]; then
@@ -9,10 +9,16 @@ if [ `id -u` -ne 0 ]; then
   exit 1
 fi
 
+wget -qO- https://download.rethinkdb.com/repository/raw/pubkey.gpg | \
+    sudo gpg --dearmor -o /usr/share/keyrings/rethinkdb-archive-keyrings.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/rethinkdb-archive-keyrings.gpg] https://download.rethinkdb.com/repository/ubuntu-$(lsb_release -cs)\
+ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+
 add-apt-repository ppa:deadsnakes/ppa
 
 apt-get -qqq update
-apt-get -qqq install -y python3.8 python3.8-dev python3.8-distutils
+apt-get -qqq install -y python3.8 python3.8-dev python3.8-distutils rethinkdb
 
 apt-get -qqq install python3-pip
 python3.8 -m pip install -U pipenv
@@ -53,10 +59,6 @@ fi
 
 cron () {
     echo "Creating cron job ..."
-    cat /etc/crontab | grep -qi '/tmp/lck_mailparser'
-    if [[ $? != 0 ]]; then
-    echo -e "$colYellow Cron job already exist. $resetCol"
-    else
     echo "*  *   *   *   *    flock /tmp/lck_mailparser /home/mailparser/postfix-parser/run.sh cron" > /etc/cron.d/mailparser
     if [ $? -eq 0 ]; then
         echo -e "$colGreen Cron job successfully created $resetCol"
