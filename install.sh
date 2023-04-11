@@ -41,7 +41,7 @@ echo -e "RETHINK_HOST=localhost\nRETHINK_DB=maildata\nVUE_DEBUG=false" >> .env
 while true; do
     read -p "Do you need to lock temp file (for large logs)? [Yy/Nn]: " accept
     case $accept in
-        [yY] ) cron;;
+        [yY] ) cron;break;;
         [nN] ) break;;
         * ) echo -e " $colRed Type only Y or N !$resetCol";;
     esac
