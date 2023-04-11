@@ -63,6 +63,8 @@ if [[ $mail_log == '' ]]; then mail_log="/var/log/mail.log"; fi
 echo -e "MAIL_LOG=$mail_log" > .env
 read -p "Enter Admin password: " admin_pass
 echo -e "ADMIN_PASS=$admin_pass" >> .env
+read -p "Enter your pytz compatible timezone. Example: Europe/London (default: UTC): " timezone
+echo -e "LOG_TIMEZONE=$timezone" >> .env
 host=$(hostname  -I | cut -f1 -d' ')
 echo -e "HOST=$host" >> .env
 secret_key=$(echo $RANDOM | md5sum | head -c 20)

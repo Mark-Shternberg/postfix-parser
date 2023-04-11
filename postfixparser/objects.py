@@ -47,6 +47,7 @@ class PostfixMessage(Dictable):
     relay: dict = field(default_factory=dict)
     client: dict = field(default_factory=dict)
     date: str = ""
+    date_full: str = ""
 
     def __post_init__(self):
         if type(self.timestamp) is not datetime:

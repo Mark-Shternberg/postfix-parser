@@ -70,11 +70,12 @@
         <tbody>
             {% raw %}
             <tr v-for="m in emails">
-                <td>{{ m.timestamp }}</td>
+                <td>{{ m.date_full }}</td>
                 <td>{{ m.id }}</td>
                 <td v-if="m.status.code === 'sent'"><div class="status-container"><i class="status-icon fa-solid fa-check" style="color: #2db42f;"></i>{{ m.status.code }}</div></td>
                 <td v-else-if="m.status.code === 'reject'"><div class="status-container"><i class="status-icon fa-solid fa-xmark" style="color: #ed1d1d;"></i>{{ m.status.code }}</div></td>
                 <td v-else-if="m.status.code === 'deferred'"><div class="status-container"><i class="status-icon fa-solid fa-timer" style="color: #513f1f;"></i>{{ m.status.code }}</div></td>
+                <td v-else-if="m.status.code === 'bounced'"><div class="status-container"><i class="fa-solid fa-arrow-rotate-left" style="color: #513f1f;"></i>{{ m.status.code }}</div></td>
                 <td v-else><div class="status-container">{{ m.status.code }}</div></td>
                 <td>{{ m.mail_from }}</td>
                 <td>{{ m.mail_to }}</td>
@@ -104,7 +105,7 @@
                 <tbody>
                     <tr>
                         <td>Timestamp</td>
-                        <td>{{ msg.timestamp }}</td>
+                        <td>{{ msg.date_full }}</td>
                     </tr>
                     <tr>
                         <td>Queue ID</td>
