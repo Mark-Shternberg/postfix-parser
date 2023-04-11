@@ -27,10 +27,13 @@ cd /home/mailparser/postfix-parser
 
 runuser -u mailparser -- cd /home/mailparser/postfix-parser && pipenv install
 
-mail_log="/var/log/mail.log"
 read -p "Enter mail.log path (default: /var/log/mail.log): " mail_log
+if [[ $mail_log == '' ]]; then mail_log="/var/log/mail.log"; fi
 echo -e "MAIL_LOG=$mail_log" > .env
 read -p "Enter Admin password: " admin_pass
+echo -e "ADMIN_PASS=$admin_pass" >> .env
+host=$(hostname  -I | cut -f1 -d' ')
+echo -e "HOST=$host" >> .env
 secret_key=$(echo $RANDOM | md5sum | head -c 20)
 echo -e "SECRET_KEY=$secret_key" >> .env
 echo -e "RETHINK_HOST=localhost\nRETHINK_DB=maildata\nVUE_DEBUG=false" >> .env
@@ -44,6 +47,8 @@ while true; do
     esac
 done
 
+chown -R mailparser:mailparser /home/mailparser/postfix-parser
+
 install -m 644 /home/mailparser/postfix-parser/postfix-parser.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable postfix-parser.service
@@ -52,7 +57,7 @@ systemctl start postfix-parser
 if [ $? -eq 0 ]
 then
   echo -e "$colGreen [Installed and work] $resetCol"
-  echo -e "$colYellow -!!!- strongly recommended to close port 8487 for non-admins -!!!- $resetCol"
+  echo -e "$colYellow -!!!- strongly recommended to close port 8487 for non-admins -!!!-\nWeb UI available from: http://$host:8487 $resetCol"
 else
   echo -e "$colRed Some errors! Check your configs and logs $resetCol"
 fi
@@ -66,6 +71,4 @@ cron () {
         echo -e "$colRed Error for cron job. $resetCol"
         exit 1
     fi
-fi
 }
-
