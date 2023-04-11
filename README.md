@@ -31,6 +31,7 @@ usermod -G syslog,adm,postfix  mailparser
 su - mailparser
 
 git clone https://github.com/Mark-Shternberg/postfix-parser.git
+cd postfix-parser
 su root ./install.sh
 ```
 

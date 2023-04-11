@@ -72,4 +72,3 @@ cron () {
         exit 1
     fi
 }
-
