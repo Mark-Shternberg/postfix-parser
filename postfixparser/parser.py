@@ -55,14 +55,10 @@ async def parse_line(mline) -> dict:
         lm['status'] = dict(code=_status_rejected.group(1), message="")
         if len(_status_rejected.groups()) > 1:
             lm['status']['message'] = _status_rejected.group(2)
-        if _to is None and lm['mail_to'] is None: lm['mail_to'] = "-@-"
-        if _from is None and lm['mail_from'] is None: lm['mail_from'] = "-@-"
     if _status is not None:
         lm['status'] = dict(code=_status.group(1), message="")
         if len(_status.groups()) > 1:
             lm['status']['message'] = _status.group(2)
-        if _to is None and lm['mail_to'] is None: lm['mail_to'] = "-@-"
-        if _from is None and lm['mail_from'] is None: lm['mail_from'] = "-@-"
 
     _message_id = find_message_id.match(mline)
     if _message_id is not None: lm['message_id'] = _message_id.group(1)
