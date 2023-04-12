@@ -124,7 +124,10 @@ window.addEventListener('load', () => {
                 this.onSettingsUpdated(val);
                 notie.alert({type: 'info', text: `User settings loaded from Local Storage :)`, time: 2})
             },
-
+            refresh() {
+                this.reset_page();
+                debounce_emails();
+            },
             onSettingsUpdated(val) {
                 let v = JSON.parse(JSON.stringify(val));
                 v.page_limit = Number.parseInt(v.page_limit);

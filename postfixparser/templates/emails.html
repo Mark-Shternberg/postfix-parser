@@ -24,7 +24,7 @@
                 <option value="mail_to">To Address</option>
                 <option value="id">Queue ID</option>
             </select>
-            <input type="text" id="date" name="date" v-model="date_filter" style="flex:none;width: 200px !important;">
+            <input type="text" id="date" name="date" placeholder="Search by date" v-model="date_filter" style="flex:none;width: 200px !important;">
             <select name="filter-email" id="filter-email" v-model="status_filter" class="dropdown">
                 <option value="NOFILTER">No Status Filter</option>
                 <option value="sent">Successfully Sent</option>
@@ -32,7 +32,12 @@
                 <option value="deferred">Delayed (deferred)</option>
                 <option value="reject">Rejected</option>
             </select>
-            <button onclick="clearInput()" class="ui button blue">Clear</button>
+            <div style="padding-left: 10px;">
+                <button onclick="clearInput()" class="ui button blue">Clear</button>
+            </div>
+            <div>
+                <button @click="refresh()" class="ui button blue"><i class="fa-solid fa-arrows-rotate"></i></button>
+            </div>
             <a href="/logout"><button class="ui button red">Log Out</button></a>
         </div>
     </div>
